@@ -1,0 +1,91 @@
+
+#screen{
+    border: 1px solid #000;
+    width: 900px;
+    height: 600px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    padding: 15px
+}
+
+#grid{
+    display: inline-block;
+}
+
+#grid table{
+    background-color: rgba(221, 221, 221, 0.3);
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    border-spacing: 1px;
+}
+
+#grid td{
+    background-color: #fff;
+}
+
+#grid td.actived{
+    background-color: #000;
+}
+
+#grid td.actived.black{
+    background-color: #000;
+}
+
+#grid td.actived.blue{
+    background-color: #00f;
+}
+
+#grid td.actived.red{
+    background-color: #f00;
+}
+
+#grid td.actived.green{
+    background-color: #0f0;
+}
+
+#grid td.actived.yellow{
+    background-color: #ff0;
+}
+
+#grid table[pixel-scale='3'] td{
+    width: 0px;
+    height: 0px;
+}
+
+#grid table[pixel-scale='4'] td{
+    width: 1px;
+    height: 1px;
+}
+
+#grid table[pixel-scale='5'] td{
+    width: 2px;
+    height: 2px;
+}
+
+#grid table[pixel-scale='6'] td{
+    width: 3px;
+    height: 3px;
+}
+
+#grid table[pixel-scale='7'] td{
+    width: 4px;
+    height: 4px;
+}
+
+#grid table[pixel-scale='8'] td{
+    width: 5px;
+    height: 5px;
+}
+
+#grid table[pixel-scale='9'] td{
+    width: 6px;
+    height: 6px;
+}
+
+#grid table[pixel-scale='10'] td{
+    width: 7px;
+    height: 7px;
+}

@@ -1,4 +1,6 @@
 var App = new Application({
-    modules: [],
+    modules: [
+        'View.Grid'
+    ],
     modulesPath: 'js/app/'
 });
