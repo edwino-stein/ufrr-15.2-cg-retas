@@ -89,3 +89,14 @@
     width: 7px;
     height: 7px;
 }
+
+#canvas{
+    background-color: transparent;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    position: absolute;
+    top: 15px;
+    opacity: 0.5;
+}
