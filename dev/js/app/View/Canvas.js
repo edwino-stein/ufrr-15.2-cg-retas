@@ -26,19 +26,27 @@ App.define('View.Canvas', {
 
     setX1: function(x){
         this.line.setAttribute('x1', x);
-    }
+    },
 
     setY1: function(y){
         this.line.setAttribute('y1', y);
-    }
+    },
 
     setX2: function(x){
         this.line.setAttribute('x2', x);
-    }
+    },
 
     setY2: function(y){
         this.line.setAttribute('y2', y);
-    }
+    },
+
+    getViewBoxWidth: function(){
+        return this.$domObj[0].viewBox.baseVal.width
+    },
+
+    getViewBoxHeight: function(){
+        return this.$domObj[0].viewBox.baseVal.height
+    },
 
     init: function(){
         this.$domObj = $(this.$domObj);

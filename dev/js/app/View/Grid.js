@@ -2,9 +2,12 @@ App.define('View.Grid', {
 
     $container: '#grid',
     $domObj: 'table',
-
+    
     maxWidth: 800,
     maxHeight: 600,
+
+    pixelsWidth: 0,
+    pixelsHeight: 0,
 
     pixelScale: 5,
     minPixelScale: 3,
@@ -62,6 +65,10 @@ App.define('View.Grid', {
         return pixel;
     },
 
+    deactivateAllPixels: function(){
+        this.$domObj.find('.actived').removeClass('actived blue red green yellow black');
+    },
+
     createCol: function(x, y){
         var col = document.createElement('td');
         col.setAttribute('x', x);
@@ -77,7 +84,7 @@ App.define('View.Grid', {
 
     addRow: function(cols){
 
-        var y = this.countRows() + 1;
+        var y = this.countRows();
         var row = this.createRow(y);
         for(var i = 0; i < cols; i++)
             row.appendChild(this.createCol(i, y));
@@ -103,7 +110,12 @@ App.define('View.Grid', {
         for(var i = 0; i < height; i++){
             this.addRow(width);
         }
+
+        this.pixelsWidth = width;
+        this.pixelsHeight = height;
     },
+
+
 
     countRows: function(){
         return this.$domObj.find('tr').length;

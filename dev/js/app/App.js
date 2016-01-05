@@ -1,7 +1,8 @@
 var App = new Application({
     modules: [
         'View.Grid',
-        'View.Canvas'
+        'View.Canvas',
+        'Controller.Main'
     ],
     modulesPath: 'js/app/'
 });
