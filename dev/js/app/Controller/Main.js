@@ -78,8 +78,7 @@ App.define('Controller.Main', {
     canvasToGridY: function(y){
         return Math.floor((this.grid.pixelsHeight * y)/this.canvas.getViewBoxHeight());
     },
-
-
+    
     change: function(e){
 
         var x1 = this.getX1(),
@@ -93,13 +92,11 @@ App.define('Controller.Main', {
         this.canvas.setY2(y2);
 
         this.grid.deactivateAllPixels();
-        this.teste(x1, y1, x2, y2);
     },
 
 
     ready: function(){
         this.grid.raster(10);
-        this.canvas.updatePosition();
     },
 
     init: function(){
