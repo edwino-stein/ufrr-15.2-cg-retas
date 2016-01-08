@@ -5,18 +5,8 @@ App.define('View.Canvas', {
     visiable: true,
 
     line: null,
-    
-    updatePosition: function(){
-        var width = this.grid.$container.width(),
-            height = this.grid.$container.height(),
-            x = ($('#screen').outerWidth() - width)/2 - 1;
 
-        this.$domObj.css({
-            left: x,
-            width: width,
-            height: height
-        });
-
+    updateViewbox: function(width, height){
         this.$domObj[0].setAttribute('viewBox', '0 0 '+width+' '+height);
     },
 
@@ -48,17 +38,26 @@ App.define('View.Canvas', {
         return this.$domObj[0].viewBox.baseVal.height
     },
 
-    init: function(){
-        this.$domObj = $(this.$domObj);
-        this.grid = this._appRoot_.get(this.grid);
+    ready: function(){
+        var me = this;
+        me.grid.$domObj.on('grid-raster', function(e, scale, pixelsWidth, pixelsHeight, width, height){
+            me.updateViewbox(width, height);
+        });
+    },
 
-        this.line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        this.line.setAttribute('x1', 0);
-        this.line.setAttribute('y1', 0);
-        this.line.setAttribute('x2', 0);
-        this.line.setAttribute('y2', 0);
-        this.line.setAttribute('stroke', '#000');
-        this.line.setAttribute('stroke-width', 0.5);
-        this.$domObj[0].appendChild(this.line);
+    init: function(){
+
+        var me = this;
+        me.$domObj = $(me.$domObj);
+        me.grid = me._appRoot_.get(me.grid);
+        me.line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        me.$domObj[0].appendChild(this.line);
+
+        me.line.setAttribute('x1', 0);
+        me.line.setAttribute('y1', 0);
+        me.line.setAttribute('x2', 0);
+        me.line.setAttribute('y2', 0);
+        me.line.setAttribute('stroke', '#000');
+        me.line.setAttribute('stroke-width', 0.5);
     }
 });

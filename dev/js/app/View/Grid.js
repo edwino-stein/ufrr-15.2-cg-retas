@@ -1,8 +1,6 @@
 App.define('View.Grid', {
+    $domObj: '#grid',
 
-    $container: '#grid',
-    $domObj: 'table',
-    
     maxWidth: 800,
     maxHeight: 600,
 
@@ -14,7 +12,7 @@ App.define('View.Grid', {
     maxPixelScale: 10,
 
     getPixel: function(x, y){
-        var pixel = this.$container.find('td[x='+x+'][y='+y+']');
+        var pixel = this.$domObj.find('td[x='+x+'][y='+y+']');
         return pixel.length > 0 ? pixel[0] : null;
     },
 
@@ -103,9 +101,9 @@ App.define('View.Grid', {
         this.clear();
         this.pixelScale = scale;
         this.$domObj.attr('pixel-scale', this.pixelScale);
-        
-        var width = this.maxWidth/scale,
-            height = this.maxHeight/scale;
+
+        var width = Math.ceil(this.maxWidth/scale),
+            height = Math.ceil(this.maxHeight/scale);
 
         for(var i = 0; i < height; i++){
             this.addRow(width);
@@ -113,9 +111,23 @@ App.define('View.Grid', {
 
         this.pixelsWidth = width;
         this.pixelsHeight = height;
+        this.$domObj.trigger(
+            'grid-raster',
+            [
+                scale,
+                width,
+                height,
+                this.$domObj.width(),
+                this.$domObj.height()
+            ]
+        );
     },
 
+    getPixelSize: function(scale){
+        if(scale >= 3 && scale <= 10) return scale - 1;
 
+        return 0;
+    },
 
     countRows: function(){
         return this.$domObj.find('tr').length;
@@ -126,7 +138,6 @@ App.define('View.Grid', {
     },
 
     init: function(){
-        this.$container = $(this.$container);
-        this.$domObj = $(this.$container).find(this.$domObj);
+        this.$domObj = $(this.$domObj);
     }
 });
