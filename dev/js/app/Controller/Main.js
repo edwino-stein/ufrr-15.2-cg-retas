@@ -1,6 +1,7 @@
 App.define('Controller.Main', {
 
     grid: 'View.Grid',
+    panel: 'View.Panel',
     canvas: 'View.Canvas',
 
     algorithm: null,
@@ -61,13 +62,48 @@ App.define('Controller.Main', {
     },
 
     ready: function(){
-        this.grid.raster(10);
+
+        var me = this;
+
+        this.panel.addListener('points-change', function(e, point1, point2){
+            me.updateLine(point1, point2);
+        });
+
+        this.panel.addListener('resolution-change', function(e, resolution){
+            me.grid.raster(resolution);
+            me.updateLine(
+                me.canvas.getPoint1(),
+                me.canvas.getPoint2()
+            );
+        });
+
+        this.panel.addListener('color-change', function(e, color){
+            me.setColor(color);
+            me.updateLine(
+                me.canvas.getPoint1(),
+                me.canvas.getPoint2()
+            );
+        });
+
+        this.panel.addListener('algorithm-change', function(e, algorithm){
+            me.algorithm = algorithm;
+            me.updateLine(
+                me.canvas.getPoint1(),
+                me.canvas.getPoint2()
+            );
+        });
+
+        me.panel.setResolution(10);
+        me.panel.setPoint(1, 200, 200);
+        me.panel.setPoint(2, 600, 400);
+        me.panel.setAlgorithm('analytic');
     },
 
     init: function(){
         var me = this;
         me.grid = me._appRoot_.get(me.grid);
         me.canvas = me._appRoot_.get(me.canvas);
+        me.panel = me._appRoot_.get(me.panel);
     }
 
 });
