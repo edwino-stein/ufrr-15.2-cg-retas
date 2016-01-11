@@ -4,30 +4,56 @@ App.define('View.Canvas', {
     $domObj: '#canvas',
     visiable: true,
 
+    colors: ['gray', 'yellow', 'cyan', 'magenta', 'blue'],
+
     line: null,
+
+    newPoint: function(x, y){
+        return new this.util.Point(x, y);
+    },
 
     updateViewbox: function(width, height){
         this.$domObj[0].setAttribute('viewBox', '0 0 '+width+' '+height);
     },
 
-    ready: function () {
-        this.updatePosition();
+    setPoint1: function(point){
+        this.line.setAttribute('x1', point.x);
+        this.line.setAttribute('y1', point.y);
     },
 
-    setX1: function(x){
-        this.line.setAttribute('x1', x);
+    setPoint2: function(point){
+        this.line.setAttribute('x2', point.x);
+        this.line.setAttribute('y2', point.y);
     },
 
-    setY1: function(y){
-        this.line.setAttribute('y1', y);
+    getPoint1: function(){
+
+        var x = parseInt(this.line.getAttribute('x1')),
+            y = parseInt(this.line.getAttribute('y1'));
+
+        return this.newPoint(
+            !isNaN(x) ? x : 0,
+            !isNaN(y) ? y : 0
+        );
     },
 
-    setX2: function(x){
-        this.line.setAttribute('x2', x);
+    getPoint2: function(){
+
+        var x = parseInt(this.line.getAttribute('x2')),
+            y = parseInt(this.line.getAttribute('y2'));
+
+        return this.newPoint(
+            !isNaN(x) ? x : 0,
+            !isNaN(y) ? y : 0
+        );
     },
 
-    setY2: function(y){
-        this.line.setAttribute('y2', y);
+    setColor: function(color){
+
+        if(this.colors.indexOf(color) < 0)
+            color = this.colors[0];
+
+        this.line.setAttribute('stroke', color);
     },
 
     getViewBoxWidth: function(){
@@ -50,6 +76,7 @@ App.define('View.Canvas', {
         var me = this;
         me.$domObj = $(me.$domObj);
         me.grid = me._appRoot_.get(me.grid);
+        me.util = me._appRoot_.get('Util');
         me.line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         me.$domObj[0].appendChild(this.line);
 
@@ -58,6 +85,6 @@ App.define('View.Canvas', {
         me.line.setAttribute('x2', 0);
         me.line.setAttribute('y2', 0);
         me.line.setAttribute('stroke', '#000');
-        me.line.setAttribute('stroke-width', 0.5);
+        me.line.setAttribute('stroke-width', 1);
     }
 });
