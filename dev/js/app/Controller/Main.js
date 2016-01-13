@@ -3,6 +3,7 @@ App.define('Controller.Main', {
     grid: 'View.Grid',
     panel: 'View.Panel',
     canvas: 'View.Canvas',
+    algorithms: 'Controller.Algorithms',
 
     algorithm: null,
     gridColor: 'black',
@@ -18,7 +19,25 @@ App.define('Controller.Main', {
 
     render: function(point1, point2){
         if(this.algorithm === null) return;
-        console.log('render');
+        this.grid.deactivateAllPixels();
+
+        switch (this.algorithm) {
+
+            case 'dda':
+                this.algorithms.dda(point1, point2, this.gridColor);
+            break;
+
+            case 'bresenham':
+                this.algorithms.bresenham(point1, point2, this.gridColor);
+            break;
+
+            default:
+            case 'analytic':
+                this.algorithms.analytic(point1, point2, this.gridColor);
+            break;
+
+
+        }
     },
 
     updateLine: function(point1, point2){
