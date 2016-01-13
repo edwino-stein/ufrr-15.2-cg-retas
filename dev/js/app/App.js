@@ -5,6 +5,7 @@ var App = new Application({
         'View.Canvas',
         'View.Scale',
         'View.Panel',
+        'Controller.Algorithms',
         'Controller.Main'
     ],
     modulesPath: 'js/app/'
