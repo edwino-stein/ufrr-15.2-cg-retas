@@ -11,13 +11,18 @@ App.define('View.Grid', {
     minPixelScale: 3,
     maxPixelScale: 10,
 
-    getPixel: function(x, y){
-        var pixel = this.$domObj.find('td[x='+x+'][y='+y+']');
+    newPoint: function(x, y){
+        return new this.util.Point(x, y);
+    },
+
+    getPixel: function(point){
+        var pixel = this.$domObj.find('td[x='+point.x+'][y='+point.y+']');
         return pixel.length > 0 ? pixel[0] : null;
     },
 
-    activePixel: function(x, y, color){
-        var pixel = this.getPixel(x, y);
+    activePixel: function(point, color){
+
+        var pixel = this.getPixel(point);
 
         if(pixel === null) return;
 
@@ -56,8 +61,8 @@ App.define('View.Grid', {
         return pixel;
     },
 
-    deactivatePixel: function(x, y){
-        var pixel = this.getPixel(x, y);
+    deactivatePixel: function(point){
+        var pixel = this.getPixel(point);
         if(pixel === null) return;
         $(pixel).removeClass('actived blue red green yellow black');
         return pixel;
@@ -67,10 +72,10 @@ App.define('View.Grid', {
         this.$domObj.find('.actived').removeClass('actived blue red green yellow black');
     },
 
-    createCol: function(x, y){
+    createCol: function(point){
         var col = document.createElement('td');
-        col.setAttribute('x', x);
-        col.setAttribute('y', y);
+        col.setAttribute('x', point.x);
+        col.setAttribute('y', point.y);
         return col;
     },
 
@@ -85,7 +90,7 @@ App.define('View.Grid', {
         var y = this.countRows();
         var row = this.createRow(y);
         for(var i = 0; i < cols; i++)
-            row.appendChild(this.createCol(i, y));
+            row.appendChild(this.createCol(this.newPoint(i, y)));
 
         this.$domObj.append(row);
     },
@@ -139,5 +144,6 @@ App.define('View.Grid', {
 
     init: function(){
         this.$domObj = $(this.$domObj);
+        this.util = this._appRoot_.get('Util');
     }
 });
