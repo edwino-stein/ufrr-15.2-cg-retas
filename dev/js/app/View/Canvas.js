@@ -85,6 +85,6 @@ App.define('View.Canvas', {
         me.line.setAttribute('x2', 0);
         me.line.setAttribute('y2', 0);
         me.line.setAttribute('stroke', '#000');
-        me.line.setAttribute('stroke-width', 1);
+        me.line.setAttribute('stroke-width', 2);
     }
 });
