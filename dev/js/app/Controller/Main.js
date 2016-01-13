@@ -82,10 +82,32 @@ App.define('Controller.Main', {
 
     ready: function(){
 
-        var me = this;
+        var me = this, initial = true, timeout = null, lastP1 = null, lastP2 = null;
 
         this.panel.addListener('points-change', function(e, point1, point2){
-            me.updateLine(point1, point2);
+
+            //Apenas para a inicialização
+            if(initial) {
+                me.updateLine(point1, point2);
+                return;
+            }
+
+            //Guarda o ultimo par de pontos informados
+            lastP1 = point1;
+            lastP2 = point2;
+
+            //Se tiver algum timeout definido, para aqui
+            if(timeout !== null) return;
+
+            // Define um tempo entre as entradas e a rasterização da linha para
+            // evitar gargalo e perca de desempenho devido a possivilidade de
+            //muitas entradas em curto periodo de tempo.
+            timeout = setTimeout(function(){
+                //Atuliza sempre com o ultimo ponto informado
+                me.updateLine(lastP1, lastP2);
+                timeout = null;
+            }, 300);
+
         });
 
         this.panel.addListener('resolution-change', function(e, resolution){
@@ -113,14 +135,16 @@ App.define('Controller.Main', {
         });
 
         me.panel.setResolution(10);
-        me.panel.setPoint(1, 200, 200);
-        me.panel.setPoint(2, 600, 400);
+        me.panel.setPoint(1, 150, 150);
+        me.panel.setPoint(2, 600, 450);
         me.panel.setAlgorithm('analytic');
+        initial = false;
     },
 
     init: function(){
         var me = this;
         me.grid = me._appRoot_.get(me.grid);
+        me.algorithms = me._appRoot_.get(me.algorithms);
         me.canvas = me._appRoot_.get(me.canvas);
         me.panel = me._appRoot_.get(me.panel);
     }
