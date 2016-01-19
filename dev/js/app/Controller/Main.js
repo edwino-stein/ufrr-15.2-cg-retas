@@ -4,6 +4,7 @@ App.define('Controller.Main', {
     panel: 'View.Panel',
     canvas: 'View.Canvas',
     algorithms: 'Controller.Algorithms',
+    $time: '#time',
 
     algorithm: null,
     gridColor: 'black',
@@ -20,24 +21,23 @@ App.define('Controller.Main', {
     render: function(point1, point2){
         if(this.algorithm === null) return;
         this.grid.deactivateAllPixels();
-
+        var time = 0;
         switch (this.algorithm) {
-
             case 'dda':
-                this.algorithms.dda(point1, point2, this.gridColor);
+                time = this.algorithms.dda(point1, point2, this.gridColor);
             break;
 
             case 'bresenham':
-                this.algorithms.bresenham(point1, point2, this.gridColor);
+                time = this.algorithms.bresenham(point1, point2, this.gridColor);
             break;
 
             default:
             case 'analytic':
-                this.algorithms.analytic(point1, point2, this.gridColor);
+                time = this.algorithms.analytic(point1, point2, this.gridColor);
             break;
-
-
         }
+
+        this.$time.find('span').html(time);
     },
 
     updateLine: function(point1, point2){
@@ -147,6 +147,7 @@ App.define('Controller.Main', {
         me.algorithms = me._appRoot_.get(me.algorithms);
         me.canvas = me._appRoot_.get(me.canvas);
         me.panel = me._appRoot_.get(me.panel);
+        me.$time = $(me.$time);
     }
 
 });

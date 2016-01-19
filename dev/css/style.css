@@ -222,3 +222,11 @@ input{
     font-size: 11px;
     color: #777;
 }
+
+#time{
+  position: absolute;
+  right: 15px;
+  font-size: 12px;
+  bottom: -20px;
+  color: #777;
+}

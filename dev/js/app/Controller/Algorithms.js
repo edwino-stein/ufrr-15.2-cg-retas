@@ -7,6 +7,11 @@ App.define('Controller.Algorithms', {
         return new this.util.Point(x, y);
     },
 
+    getTimeStamp: function(){
+      return Date.now()
+      // return new Date().getUTCMilliseconds();
+    },
+
     /**
         Converte um ponto do canvas(mm) em um pixel da grid
     */
@@ -30,6 +35,7 @@ App.define('Controller.Algorithms', {
     analytic: function(start, end, color){
 
         var pixelSize = this.getPixelSize(),
+            time = this.getTimeStamp(),
             x, y;
 
         if(start.x === end.x){
@@ -62,6 +68,8 @@ App.define('Controller.Algorithms', {
                 this.grid.activePixel(this.canvasToGrid(x, y), color);
             }
         }
+
+        return this.getTimeStamp() - time;
     },
 
     /**
@@ -72,7 +80,8 @@ App.define('Controller.Algorithms', {
      */
     dda: function(start, end, color){
 
-        var dx = end.x - start.x,
+        var time = this.getTimeStamp()
+            dx = end.x - start.x,
             dy = end.y - start.y,
             steps = dx > dy ? Math.abs(dx) : Math.abs(dy),
             incrementX = dx/steps,
@@ -84,10 +93,14 @@ App.define('Controller.Algorithms', {
             x += incrementX;
             y += incrementY;
         }
+
+        return this.getTimeStamp() - time;
     },
 
     bresenham: function(start, end, color){
 
+        var time = this.getTimeStamp();
+        
         //Converte para coordenadas inteiras aos seus pixels correspondentes da matriz
         start = this.canvasToGrid(start.x, start.y);
         end = this.canvasToGrid(end.x, end.y);
@@ -216,6 +229,8 @@ App.define('Controller.Algorithms', {
                 }
             break;
         }
+
+        return this.getTimeStamp() - time;
     },
 
     init: function(){
