@@ -13,6 +13,27 @@ App.define('View.Panel', {
         return new this.util.Point(x, y);
     },
 
+    colorHexToDec: function(hex){
+
+        if(hex.length === 3)
+            return new this.util.Color(
+                parseInt(hex[0]+hex[0], 16),
+                parseInt(hex[1]+hex[1], 16),
+                parseInt(hex[2]+hex[2], 16)
+            );
+
+        else if(hex.length === 6)
+            return new this.util.Color(
+                parseInt(hex.slice(0, 2), 16),
+                parseInt(hex.slice(2, 4), 16),
+                parseInt(hex.slice(4, 6), 16)
+            );
+
+        else
+            return new this.util.Color(0, 0, 0);
+
+    },
+
     addListener: function(eventName, handle){
         this.$domObj.on(eventName, handle);
     },
@@ -94,7 +115,7 @@ App.define('View.Panel', {
     },
 
     onColorSelect: function(value){
-        this._appRoot_.Base.fireEvent('color-change', this.$domObj, [value]);
+        this._appRoot_.Base.fireEvent('color-change', this.$domObj, [this.colorHexToDec(value)]);
     },
 
     onAlgorithmSelect: function(value){
@@ -104,12 +125,12 @@ App.define('View.Panel', {
     ready: function(){
         var me = this;
 
-        me.grid.$domObj.on('grid-raster', function(e, scale, pixelsWidth, pixelsHeight, width, height){
-            me.$points.each(function(index, input){
-                if(input.id.indexOf('x') >= 0) input.max = width;
-                if(input.id.indexOf('y') >= 0) input.max = height;
-            });
-        });
+        // me.grid.$domObj.on('grid-raster', function(e, scale, pixelsWidth, pixelsHeight, width, height){
+        //     me.$points.each(function(index, input){
+        //         if(input.id.indexOf('x') >= 0) input.max = width;
+        //         if(input.id.indexOf('y') >= 0) input.max = height;
+        //     });
+        // });
         me.$points.bind('input', function(){me.onPoinsInputChange(this, parseInt($(this).val()))});
         me.$resolutionSelect.change(function(){me.onSelectResolutionChange(parseInt(this.value))});
         me.$algorithmSelect.change(function(){me.onAlgorithmSelect(this.value)});

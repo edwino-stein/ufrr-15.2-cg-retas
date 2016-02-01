@@ -4,8 +4,6 @@ App.define('View.Canvas', {
     $domObj: '#canvas',
     visiable: true,
 
-    colors: ['gray', 'yellow', 'cyan', 'magenta', 'blue'],
-
     line: null,
 
     newPoint: function(x, y){
@@ -48,12 +46,13 @@ App.define('View.Canvas', {
         );
     },
 
-    setColor: function(color){
+    setColor: function(c){
+        var color = '';
 
-        if(this.colors.indexOf(color) < 0)
-            color = this.colors[0];
-
-        this.line.setAttribute('stroke', color);
+        color += ((0xff ^ c.red) < 16 ? '0' : '') + (0xff ^ c.red).toString(16);
+        color += ((0xff ^ c.green) < 16 ? '0' : '') + (0xff ^ c.green).toString(16);
+        color += ((0xff ^ c.blue) < 16 ? '0' : '') + (0xff ^ c.blue).toString(16);
+        this.line.setAttribute('stroke', '#'+color);
     },
 
     getViewBoxWidth: function(){
@@ -66,9 +65,7 @@ App.define('View.Canvas', {
 
     ready: function(){
         var me = this;
-        me.grid.$domObj.on('grid-raster', function(e, scale, pixelsWidth, pixelsHeight, width, height){
-            me.updateViewbox(width, height);
-        });
+        me.updateViewbox(800, 600);
     },
 
     init: function(){
@@ -85,6 +82,6 @@ App.define('View.Canvas', {
         me.line.setAttribute('x2', 0);
         me.line.setAttribute('y2', 0);
         me.line.setAttribute('stroke', '#000');
-        me.line.setAttribute('stroke-width', 2);
+        me.line.setAttribute('stroke-width', '2');
     }
 });

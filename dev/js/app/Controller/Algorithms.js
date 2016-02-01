@@ -8,7 +8,7 @@ App.define('Controller.Algorithms', {
     },
 
     getTimeStamp: function(){
-      return Date.now()
+      return performance.now()
       // return new Date().getUTCMilliseconds();
     },
 
@@ -17,8 +17,8 @@ App.define('Controller.Algorithms', {
     */
     canvasToGrid: function(x, y){
         return this.newPoint(
-            Math.floor((this.grid.pixelsWidth * x)/this.canvas.getViewBoxWidth()),
-            Math.floor((this.grid.pixelsHeight * y)/this.canvas.getViewBoxHeight())
+            Math.floor((this.grid.fakeWidth * x)/this.canvas.getViewBoxWidth()),
+            Math.floor((this.grid.fakeHeight * y)/this.canvas.getViewBoxHeight())
         );
     },
 
@@ -26,7 +26,7 @@ App.define('Controller.Algorithms', {
         Pega o tamanho de um pixel da grid
     */
     getPixelSize: function(){
-        return this.grid.pixelScale;
+        return this.grid.pixelSize;
     },
 
     /**
@@ -49,7 +49,7 @@ App.define('Controller.Algorithms', {
 
             x = start.x;
             for(y = start.y; y < end.y; y += pixelSize)
-                this.grid.activePixel(this.canvasToGrid(x, y), color);
+                this.grid.activePixel(this.canvasToGrid(x, y), color, false);
         }
         else{
 
@@ -65,7 +65,7 @@ App.define('Controller.Algorithms', {
 
             for(var x = start.x; x <= end.x; x += pixelSize){
                 y = m * x + b;
-                this.grid.activePixel(this.canvasToGrid(x, y), color);
+                this.grid.activePixel(this.canvasToGrid(x, y), color, false);
             }
         }
 
@@ -89,7 +89,7 @@ App.define('Controller.Algorithms', {
             x = start.x, y = start.y;
 
         for(var i = 0; i <= steps; i++){
-            this.grid.activePixel(this.canvasToGrid(x, y), color);
+            this.grid.activePixel(this.canvasToGrid(x, y), color, false);
             x += incrementX;
             y += incrementY;
         }
@@ -100,7 +100,7 @@ App.define('Controller.Algorithms', {
     bresenham: function(start, end, color){
 
         var time = this.getTimeStamp();
-        
+
         //Converte para coordenadas inteiras aos seus pixels correspondentes da matriz
         start = this.canvasToGrid(start.x, start.y);
         end = this.canvasToGrid(end.x, end.y);
@@ -135,7 +135,7 @@ App.define('Controller.Algorithms', {
             case 1:
                 p = 2*dy - dx;
                 for(pixel.x; pixel.x <= end.x; pixel.x++){
-                    this.grid.activePixel(pixel, color);
+                    this.grid.activePixel(pixel, color, false);
                     if(p < 0){
                         p += 2*dy;
                         continue;
@@ -147,7 +147,7 @@ App.define('Controller.Algorithms', {
             case 2:
                 p = 2*dx - dy;
                 for(pixel.y; pixel.y <= end.y; pixel.y++){
-                    this.grid.activePixel(pixel, color);
+                    this.grid.activePixel(pixel, color, false);
                     if(p < 0){
                         p += 2*dx;
                         continue;
@@ -159,7 +159,7 @@ App.define('Controller.Algorithms', {
             case 3:
                 p = 2*dx - dy;
                 for(pixel.y; pixel.y <= end.y; pixel.y++){
-                    this.grid.activePixel(pixel, color);
+                    this.grid.activePixel(pixel, color, false);
                     if(p < 0){
                         p += 2*dx;
                         continue;
@@ -171,7 +171,7 @@ App.define('Controller.Algorithms', {
             case 4:
                 p = 2*dy - dx;
                 for(pixel.x; pixel.x >= end.x; pixel.x--){
-                    this.grid.activePixel(pixel, color);
+                    this.grid.activePixel(pixel, color, false);
                     if(p < 0){
                         p += 2*dy;
                         continue;
@@ -183,7 +183,7 @@ App.define('Controller.Algorithms', {
             case 5:
                 p = 2*dy - dx;
                 for(pixel.x; pixel.x >= end.x; pixel.x--){
-                    this.grid.activePixel(pixel, color);
+                    this.grid.activePixel(pixel, color, false);
                     if(p < 0){
                         p += 2*dy;
                         continue;
@@ -195,7 +195,7 @@ App.define('Controller.Algorithms', {
             case 6:
                 p = 2*dx - dy;
                 for(pixel.y; pixel.y >= end.y; pixel.y--){
-                    this.grid.activePixel(pixel, color);
+                    this.grid.activePixel(pixel, color, false);
                     if(p < 0){
                         p += 2*dx;
                         continue;
@@ -207,7 +207,7 @@ App.define('Controller.Algorithms', {
             case 7:
                 p = 2*dx - dy;
                 for(pixel.y; pixel.y >= end.y; pixel.y--){
-                    this.grid.activePixel(pixel, color);
+                    this.grid.activePixel(pixel, color, false);
                     if(p < 0){
                         p += 2*dx;
                         continue;
@@ -219,7 +219,7 @@ App.define('Controller.Algorithms', {
             case 8:
                 p = 2*dy - dx;
                 for(pixel.x; pixel.x <= end.x; pixel.x++){
-                    this.grid.activePixel(pixel, color);
+                    this.grid.activePixel(pixel, color, false);
                     if(p < 0){
                         p += 2*dy;
                         continue;

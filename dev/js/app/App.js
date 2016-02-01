@@ -3,7 +3,6 @@ var App = new Application({
         'Util',
         'View.Grid',
         'View.Canvas',
-        'View.Scale',
         'View.Panel',
         'Controller.Algorithms',
         'Controller.Main'

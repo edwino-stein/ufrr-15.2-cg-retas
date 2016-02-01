@@ -18,9 +18,8 @@
     <body>
         <div id="screen">
             <div id="viewbox">
-                <table id="grid"></table>
+                <canvas id="grid" width="800" height="600"></canvas>
                 <svg id="canvas" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" viewBox="0 0 800 600"></svg>
-                <svg id="scale" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" viewBox="0 0 800 600"></svg>
             </div>
         </div>
         <div id="panel" class="container-fluid" >
@@ -53,12 +52,10 @@
                     <h4 style="padding: 0px">Resolução</h4>
                     <label>Resolução em pixels</label>
                     <select id="resolution">
-                        <option value="5" >160x120</option>
-                        <option value="6" >134x100</option>
-                        <option value="7" >115x86</option>
-                        <option value="8" >100x75</option>
-                        <option value="9" >89x67</option>
-                        <option value="10" selected >80x60</option>
+                        <option value="9" >80x60</option>
+                        <option value="7" selected >100x75</option>
+                        <option value="4" >160x120</option>
+                        <option value="3" >200x150</option>
                     </select>
                 </div>
                 <div class="col-xs-6">
@@ -78,11 +75,11 @@
                     <h4 style="padding: 0px">Cor</h4>
                     <table id="palette">
                         <tr>
-                            <td data-color="black" class="selected" style="background-color: #000"></td>
-                            <td data-color="blue" style="background-color: #00f"></td>
-                            <td data-color="red" style="background-color: #f00"></td>
-                            <td data-color="green" style="background-color: #0f0"></td>
-                            <td data-color="yellow" style="background-color: #ff0"></td>
+                            <td data-color="000" class="selected" style="background-color: #000"></td>
+                            <td data-color="00f" style="background-color: #00f"></td>
+                            <td data-color="f00" style="background-color: #f00"></td>
+                            <td data-color="0f0" style="background-color: #0f0"></td>
+                            <td data-color="ff0" style="background-color: #ff0"></td>
                         </tr>
                     </table>
                 </div>

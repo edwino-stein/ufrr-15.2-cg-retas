@@ -1,149 +1,135 @@
 App.define('View.Grid', {
-    $domObj: '#grid',
+    domObj: '#grid',
 
-    maxWidth: 800,
-    maxHeight: 600,
+    fakeWidth: 200,
+    fakeHeight: 150,
+    realWidth: 800,
+    realHeight: 600,
 
-    pixelsWidth: 0,
-    pixelsHeight: 0,
+    pixelSize: 3,
 
-    pixelScale: 5,
-    minPixelScale: 3,
-    maxPixelScale: 10,
+    context: null,
+    imageData: null,
+    map: null,
 
-    newPoint: function(x, y){
-        return new this.util.Point(x, y);
-    },
+    setResolution: function(pixelSize){
 
-    getPixel: function(point){
-        var pixel = this.$domObj.find('td[x='+point.x+'][y='+point.y+']');
-        return pixel.length > 0 ? pixel[0] : null;
-    },
+        switch (pixelSize) {
 
-    activePixel: function(point, color){
-
-        var pixel = this.getPixel(point);
-
-        if(pixel === null) return;
-
-        switch(color){
-
-            case 'blue':
-            case 1:
-                color = 'blue';
+            case 9:
+                this.pixelSize = 9;
+                this.fakeWidth = 80;
+                this.fakeHeight = 60;
             break;
 
-            case 'red':
-            case 2:
-                color = 'red';
+            case 7:
+                this.pixelSize = 7;
+                this.fakeWidth = 100;
+                this.fakeHeight = 75;
             break;
 
-            case 'green':
-            case 3:
-                color = 'green';
-            break;
-
-            case 'yellow':
             case 4:
-                color = 'yellow';
+                this.pixelSize = 4;
+                this.fakeWidth = 160;
+                this.fakeHeight = 120;
             break;
 
-            case 'black':
-            case 5:
+            case 3:
             default:
-                color = 'black';
+                this.pixelSize = 3;
+                this.fakeWidth = 200;
+                this.fakeHeight = 150;
             break;
         }
 
-        $(pixel).removeClass('actived blue red green yellow black')
-                .addClass('actived '+color);
-
-        return pixel;
+        this.mapGrid();
     },
 
-    deactivatePixel: function(point){
-        var pixel = this.getPixel(point);
-        if(pixel === null) return;
-        $(pixel).removeClass('actived blue red green yellow black');
-        return pixel;
-    },
+    mapGrid: function(){
 
-    deactivateAllPixels: function(){
-        this.$domObj.find('.actived').removeClass('actived blue red green yellow black');
-    },
+        this.map = [];
+        var row, pixel;
+        for(var y = 0; y < this.realHeight; y += this.pixelSize + 1){
 
-    createCol: function(point){
-        var col = document.createElement('td');
-        col.setAttribute('x', point.x);
-        col.setAttribute('y', point.y);
-        return col;
-    },
+            row = [];
+            for(var x = 0; x < this.realWidth; x += this.pixelSize + 1){
 
-    createRow: function(offset){
-        var row = document.createElement('tr');
-        row.setAttribute('offset', offset);
-        return row;
-    },
+                pixel = [];
+                for(var i = y; i < y + this.pixelSize; i++)
+                    for(var j = x; j < x + this.pixelSize; j++)
+                        pixel.push((i * this.realWidth + j) * 4);
 
-    addRow: function(cols){
+                row.push(pixel);
+            }
 
-        var y = this.countRows();
-        var row = this.createRow(y);
-        for(var i = 0; i < cols; i++)
-            row.appendChild(this.createCol(this.newPoint(i, y)));
-
-        this.$domObj.append(row);
-    },
-
-    clear: function(){
-        this.$domObj.find('tr').remove();
-    },
-
-    raster: function(scale){
-        if(scale < this.minPixelScale || scale > this.maxPixelScale)
-            throw 'Escala inválida';
-
-        this.clear();
-        this.pixelScale = scale;
-        this.$domObj.attr('pixel-scale', this.pixelScale);
-
-        var width = Math.ceil(this.maxWidth/scale),
-            height = Math.ceil(this.maxHeight/scale);
-
-        for(var i = 0; i < height; i++){
-            this.addRow(width);
+            this.map.push(row);
         }
 
-        this.pixelsWidth = width;
-        this.pixelsHeight = height;
-        this.$domObj.trigger(
-            'grid-raster',
-            [
-                scale,
-                width,
-                height,
-                this.$domObj.width(),
-                this.$domObj.height()
-            ]
+        this.clearFrame(true);
+    },
+
+    activePixel: function(point, color, autoUpdate){
+
+        if(point.x < 0 || point.x >= this.fakeWidth) return;
+        if(point.y < 0 || point.y >= this.fakeHeight) return;
+        autoUpdate = typeof(autoUpdate) === 'undefined' || autoUpdate ? true : false;
+
+        var pixel = this.map[point.y][point.x], index;
+
+        for(var i in pixel){
+            index = pixel[i];
+            this.imageData.data[index]   = color.red;       //red
+            this.imageData.data[++index] = color.green;     //green
+            this.imageData.data[++index] = color.blue;      //blue
+            this.imageData.data[++index] = 255;             //alpha
+        }
+
+        if(autoUpdate) this.update();
+    },
+
+    getPixelColor: function(point){
+
+        if(point.x < 0 || point.x >= this.fakeWidth) return;
+        if(point.y < 0 || point.y >= this.fakeHeight) return;
+
+        var pixel = this.map[point.y][point.x][0];
+        return new this.util.Color(
+            this.imageData.data[pixel],
+            this.imageData.data[pixel + 1],
+            this.imageData.data[pixel + 2]
         );
     },
 
-    getPixelSize: function(scale){
-        if(scale >= 3 && scale <= 10) return scale - 1;
+    clearFrame: function(autoUpdate){
 
-        return 0;
+        autoUpdate = typeof(autoUpdate) === 'undefined' || autoUpdate ? true : false;
+
+        this.context.clearRect(0, 0, this.realWidth, this.realHeight);
+        this.imageData = this.context.getImageData(0, 0, this.realWidth, this.realHeight);
+
+        for(var i = 0; i < this.fakeHeight; i++)
+            for(var j = 0; j < this.fakeWidth; j++)
+                this.activePixel(
+                    {x: j, y: i},
+                    {red: 255, green: 255, blue:255},
+                    false
+                );
+
+        if(autoUpdate) this.update();
     },
 
-    countRows: function(){
-        return this.$domObj.find('tr').length;
+    update: function(){
+        this.context.putImageData(this.imageData, 0, 0);
     },
 
     ready: function(){
-        this.$domObj.attr('pixel-scale', this.pixelScale);
+        this.setResolution(9);
     },
 
     init: function(){
-        this.$domObj = $(this.$domObj);
+        this.domObj = $(this.domObj)[0];
+        this.context = this.domObj.getContext('2d');
+        this.imageData = this.context.getImageData(0, 0, this.realWidth, this.realHeight);
         this.util = this._appRoot_.get('Util');
     }
 });
